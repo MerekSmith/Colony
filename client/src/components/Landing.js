@@ -51,6 +51,7 @@ class Landing extends Component {
   render() {
     return (
       <div className='container game-start' style={{ textAlign: "center" }}>
+        <Button label={"Create Game"} link={"/game"} isLink={true} />
         <div>{this.renderContent()}</div>
         <Button label={"How to Play"} link={"/instructions"} isLink={true} />
       </div>
