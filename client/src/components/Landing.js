@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
+import Button from "./Helpers/Button";
 
 class Landing extends Component {
   renderContent() {
@@ -25,50 +26,23 @@ class Landing extends Component {
         // Not logged in yet.
         return (
           <React.Fragment>
-            <a
-              className='btn waves-effect waves-light btn-large orange'
-              href='/auth/google'
-            >
-              Login With Google and Create Game
-            </a>
+            <Button
+              label={"Login with Google to Create Game"}
+              link={"/auth/google"}
+              isLink={false}
+              extraClass='google-btn'
+            />
             <div className='g-signin2' data-onsuccess='onSignIn' />
-            <Link
-              to='join'
-              className='btn waves-effect waves-light btn-large orange'
-            >
-              Join Game
-            </Link>
+            <Button label={"Join Game"} link={"/join"} isLink={true} />
           </React.Fragment>
         );
       default:
         // Logged in
         return (
           <React.Fragment>
-            <div>
-              <Link
-                className='btn waves-effect waves-light btn-large orange'
-                to='/game'
-              >
-                Start Game
-              </Link>
-            </div>
-            <div>
-              {" "}
-              <Link
-                to='join'
-                className='btn waves-effect waves-light btn-large orange'
-              >
-                Join Game
-              </Link>
-            </div>
-            <div>
-              <a
-                className='btn waves-effect waves-light btn-large orange'
-                href='/api/logout'
-              >
-                Logout
-              </a>
-            </div>
+            <Button label={"Create Game"} link={"/game"} isLink={true} />
+            <Button label={"Join Game"} link={"/join"} isLink={true} />
+            <Button label={"Logout"} link={"/api/logout"} isLink={false} />
           </React.Fragment>
         );
     }
@@ -78,12 +52,7 @@ class Landing extends Component {
     return (
       <div className='container game-start' style={{ textAlign: "center" }}>
         <div>{this.renderContent()}</div>
-        <Link
-          to='/instructions'
-          className='btn waves-effect waves-light btn-large orange'
-        >
-          How to Play
-        </Link>
+        <Button label={"How to Play"} link={"/instructions"} isLink={true} />
       </div>
     );
   }

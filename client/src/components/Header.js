@@ -10,8 +10,10 @@ class Header extends Component {
       case false:
         return (
           <React.Fragment>
-            <li>
-              <a href='/auth/google'>Login With Google</a>
+            <li className='nav-item'>
+              <a href='/auth/google' className='navbar-brand'>
+                Login With Google
+              </a>
             </li>
             <li>
               <div className='g-signin2' data-onsuccess='onSignIn' />
@@ -20,8 +22,10 @@ class Header extends Component {
         );
       default:
         return (
-          <li>
-            <a href='/api/logout'>Logout</a>
+          <li className='nav-item'>
+            <a href='/api/logout' className='navbar-brand'>
+              Logout
+            </a>
           </li>
         );
     }
@@ -29,14 +33,12 @@ class Header extends Component {
 
   render() {
     return (
-      <nav className='nav'>
-        <div className=''>
-          <div className='container'>
-            <Link className='left brand-logo' to={"/"}>
-              The Colony
-            </Link>
-            <ul className='right'>{this.renderContent()}</ul>
-          </div>
+      <nav className='navbar'>
+        <div className='container'>
+          <Link className='navbar-brand main-header m-auto' to={"/"}>
+            The Colony
+          </Link>
+          {/* <ul className='navbar-nav ml-auto'>{this.renderContent()}</ul> */}
         </div>
       </nav>
     );

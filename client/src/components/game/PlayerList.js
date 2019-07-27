@@ -11,8 +11,15 @@ function PlayerList(props) {
   console.log("players", players);
   return (
     <div>
-      <Card style={{ width: "18rem" }}>
-        <Card.Header>Players in room {room}</Card.Header>
+      <Card style={{ width: "15rem", border: "black 2px solid" }}>
+        <Card.Header
+          style={{
+            backgroundColor: "#e67e22",
+            borderBottom: "black 2px solid"
+          }}
+        >
+          Players in room {room}
+        </Card.Header>
         <ListGroup variant='flush'>
           {playerCount > 1 ? (
             players.map(({ name, id }) => {

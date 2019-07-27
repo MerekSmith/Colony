@@ -7,20 +7,56 @@ html {
   -o-background-size: cover;
 }
 
-.nav {
+body {
   background-color: transparent;
 }
 
-.btn {
+/* .nav {
+  background-color: transparent;
+} */
+
+.main-header {
+  color: #9b1f05;
+  font-size: 50px;
+  font-family: "Nosifer", cursive;
+}
+
+.main-header:hover {
+  color: #9b1f05;
+}
+
+.colony-font {
+  font-family: "Nosifer", cursive;
+  color: #9b1f05;
+}
+
+.main-btn {
   width: 250px;
   height: 100px;
   font-size: 20px;
   text-align: center;
-  padding: 15px 0px;
+  padding: 35px 0px;
   margin: 15px;
+  font-family: "Nosifer", cursive;
+  border: solid black 3px;
+  background-color: #e67e22;
+}
+
+.google-btn {
+  padding: 5px 0px;
 }
 
 .game-start {
   text-align: center;
-  margin-top: 50px;
+  margin-top: 20px;
+}
+
+@media only screen and (max-width: 640px) {
+  .navbar-brand {
+    font-size: 35px;
+  }
+
+  .game-start {
+    margin-top: 10px;
+  }
 }

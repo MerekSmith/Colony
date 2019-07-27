@@ -62,7 +62,7 @@ class Join extends Component {
           </div>
           <input
             type='submit'
-            className='btn waves-effect waves-light btn-large orange'
+            className='main-btn btn btn-warning btn-lg'
             value='Join Room'
           />
         </form>

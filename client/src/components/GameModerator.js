@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import PlayerList from "./game/PlayerList";
+import PlayerList from "./Game/PlayerList";
 
 class GameModerator extends Component {
   constructor(props) {
@@ -34,11 +34,10 @@ class GameModerator extends Component {
   render() {
     return (
       <div>
-        <h2>Game Moderator</h2>
+        <h2 className='navbar-brand'>Game Moderator</h2>
         {this.state.room ? (
-          <h4>
-            Please have users join by going to the following link and entered in
-            room # {this.state.room}
+          <h4 className='colony-font'>
+            Please have users join this game with room # {this.state.room}
           </h4>
         ) : null}
         <PlayerList playerList={this.props.socket} />

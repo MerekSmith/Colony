@@ -33,7 +33,7 @@ class App extends Component {
         <Router>
           <div>
             <Header />
-            <div className='container'>
+            <div className='container m-auto'>
               <Route exact path='/' component={Landing} />
               <Route exact path='/instuctions' component={Instructions} />
               <Route exact path='/game' component={GameModerator} />
