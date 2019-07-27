@@ -15,7 +15,7 @@ module.exports = app => {
     passport.authenticate("google"),
     (req, res) => {
       // redirect is a function that comes from the response and can redirect us back to a different page.
-      res.redirect("/");
+      res.redirect("/game");
     }
   );
 
