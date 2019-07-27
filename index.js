@@ -12,7 +12,7 @@ const SocketManager = require("./services/SocketManger");
 require("./models/User");
 require("./services/passport");
 
-mongoose.connect(process.env.MONGO_URI || "mongodb://localhost/colony", {
+mongoose.connect(keys.mongoURI, {
   useNewUrlParser: true
 });
 
