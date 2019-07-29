@@ -8,7 +8,6 @@ function PlayerList(props) {
   if (players) {
     playerCount = players.length;
   }
-  console.log("players", players);
   return (
     <div>
       <Card style={{ border: "black 2px solid" }}>

@@ -32,10 +32,10 @@
     "image": "./assets/images/alien-colonist.png"
   },
   {
-    "roleName": "Hobo",
-    "effect": "The Hobo hates being in the colony so much that he just wants to die.",
-    "team": "The Hobo is not on a team but is considered a colonist.",
-    "winCondition": "The Hobo wins if he dies. If he dies along with an infected player, both teams win. If only the Tanner dies, he is the only winner.",
+    "roleName": "Sad Robot",
+    "effect": "The Sad Robot hates being in the colony so much that he just wants to die.",
+    "team": "The Sad Robot is not on a team but is considered a Colonist.",
+    "winCondition": "The Sad Robot wins if he dies. If he dies along with an infected player, both teams win. If only the Tanner dies, he is the only winner.",
     "maxRoleCount": 1,
     "image": "./assets/images/robot-colonist.png"
   },

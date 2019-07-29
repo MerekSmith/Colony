@@ -60,6 +60,15 @@ body {
   margin: auto;
 }
 
+.character-card {
+  width: 18rem;
+  margin: auto;
+}
+
+.card-title {
+  font-weight: bold;
+}
+
 @media only screen and (max-width: 640px) {
   .navbar-brand {
     font-size: 35px;
@@ -67,5 +76,10 @@ body {
 
   .game-start {
     margin-top: 10px;
+  }
+
+  .character-card {
+    width: 100%;
+    margin: auto;
   }
 }

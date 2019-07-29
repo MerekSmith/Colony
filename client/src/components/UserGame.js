@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import Character from "./Game/Character";
 
 class UserGame extends Component {
   render() {
@@ -20,7 +21,10 @@ class UserGame extends Component {
           </div>
         ) : (
           // This is where the game play will start to be displayed.
-          <h1 className='colony-text'>Game has started!</h1>
+          <div>
+            <h3 className='colony-text'>Game has started!</h3>
+            <Character info={this.props.socket.socket.role} />
+          </div>
         )}
       </div>
     );

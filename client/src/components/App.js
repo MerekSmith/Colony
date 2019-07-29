@@ -27,8 +27,9 @@ class App extends Component {
     );
     // List for game to start
     socket.on("game has started", role => {
-      this.props.startGame();
       socket.role = role;
+      this.props.saveSocket(socket);
+      this.props.startGame();
       console.log("socket role start game", role, socket);
     });
   }

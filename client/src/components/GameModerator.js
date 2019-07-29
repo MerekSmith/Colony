@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { startGame } from "../actions/socketActions";
 import { Row, Col } from "react-bootstrap";
 import PlayerList from "./Game/PlayerList";
+import Moderator from "./Game/Moderator";
 
 class GameModerator extends Component {
   constructor(props) {
@@ -41,46 +42,58 @@ class GameModerator extends Component {
     socket.emit("start game", this.state.room);
   }
 
+  renderContent() {
+    switch (this.props.socket.gameStarted) {
+      case false:
+        return (
+          <React.Fragment>
+            {this.state.room ? (
+              <div>
+                <h4 className='colony-text' style={{ marginBottom: "10px" }}>
+                  Please have users join this game with room # {this.state.room}
+                </h4>
+                {this.props.socket.playerCount >= 3 ? (
+                  <button
+                    className='main-btn btn-warning'
+                    style={{ margin: "auto" }}
+                    onClick={() => this.startGame()}
+                  >
+                    Start Game
+                  </button>
+                ) : (
+                  <h4 className='colony-text'>
+                    Need 3 players to start the game. There are currently{" "}
+                    {this.props.socket.playerCount} players.
+                  </h4>
+                )}
+              </div>
+            ) : (
+              <h2 className='colony-text'>
+                There was an issue creating a room. Please go back and try
+                again.
+              </h2>
+            )}
+          </React.Fragment>
+        );
+      case true:
+        return <Moderator />;
+    }
+  }
+
   render() {
     return (
       <div>
         <div style={{ textAlign: "center" }}>
-          <h2
-            className='colony-text'
-            style={{ marginTop: "20px", marginBottom: "20px" }}
-          >
+          <h2 className='colony-text' style={{ marginBottom: "30px" }}>
             Game Moderator
           </h2>
-          {this.state.room ? (
-            <h4
-              className='colony-text'
-              style={{ marginTop: "20px", marginBottom: "20px" }}
-            >
-              Please have users join this game with room # {this.state.room}
-            </h4>
-          ) : null}
         </div>
         <Row>
           <Col md={4}>
             <PlayerList playerList={this.props.socket} />
           </Col>
-          <Col md={8}>
-            <h4 className='colony-text'>
-              Need 4 players to start the game. There are{" "}
-              {this.props.socket.playerCount} players
-            </h4>
-          </Col>
+          <Col md={8}>{this.renderContent()}</Col>
         </Row>
-        {this.props.socket.playerCount >= 1 ? (
-          <div>
-            <button
-              className='main-btn btn-warning'
-              onClick={() => this.startGame()}
-            >
-              Start Game
-            </button>
-          </div>
-        ) : null}
       </div>
     );
   }
