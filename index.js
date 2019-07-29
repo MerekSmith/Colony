@@ -12,6 +12,7 @@ const SocketManager = require("./services/SocketManger");
 require("./models/User");
 require("./services/passport");
 
+// Need to make sure that the mongo Atlas database has the network access whitelisted as 0.0.0.0/0, unless you know the specific IP address.
 mongoose.connect(keys.mongoURI, {
   useNewUrlParser: true
 });

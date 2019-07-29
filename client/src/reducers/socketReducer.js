@@ -1,9 +1,11 @@
-import { SAVE_SOCKET, SAVE_PLAYERS } from "../actions/types";
+import { SAVE_SOCKET, SAVE_PLAYERS, START_GAME } from "../actions/types";
 
 const intitalState = {
   socket: null,
   room: null,
-  players: null
+  players: null,
+  playerCount: 0,
+  gameStarted: false
 };
 
 export default function(state = intitalState, action) {
@@ -19,7 +21,13 @@ export default function(state = intitalState, action) {
       return {
         ...state,
         players: action.payload.players,
-        room: action.payload.room
+        room: action.payload.room,
+        playerCount: action.payload.playerCount
+      };
+    case START_GAME:
+      return {
+        ...state,
+        gameStarted: true
       };
     default:
       return state;

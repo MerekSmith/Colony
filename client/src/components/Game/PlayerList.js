@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, ListGroup, ListGroupItem, Header } from "react-bootstrap";
+import { Card, ListGroup } from "react-bootstrap";
 
 function PlayerList(props) {
   // console.log("props", props);
@@ -11,12 +11,13 @@ function PlayerList(props) {
   console.log("players", players);
   return (
     <div>
-      <Card style={{ width: "15rem", border: "black 2px solid" }}>
+      <Card style={{ border: "black 2px solid" }}>
         <Card.Header
           style={{
             backgroundColor: "#e67e22",
             borderBottom: "black 2px solid"
           }}
+          className='colony-font player-list'
         >
           Players in room {room}
         </Card.Header>

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { connect } from "react-redux";
 import { fetchUser } from "../actions/authActions";
-import { savePlayers, saveSocket } from "../actions/socketActions";
+import { savePlayers, saveSocket, startGame } from "../actions/socketActions";
 import io from "socket.io-client";
 import "../index.css";
 
@@ -12,7 +12,7 @@ import Instructions from "./Instructions";
 import GameModerator from "./GameModerator";
 import Join from "./Join";
 
-const socket = io.connect("/");
+const socket = io.connect("localhost:5000");
 class App extends Component {
   componentDidMount() {
     // Fetch Google Login
@@ -22,9 +22,15 @@ class App extends Component {
     this.props.saveSocket(socket);
 
     // Listens for when people have joined but will only be received in they are in the specific room. Have it in App as it will be used by both GameModerator and Join components.
-    socket.on("joined", ({ players, room }) =>
-      this.props.savePlayers({ players, room })
+    socket.on("joined", ({ players, room, playerCount }) =>
+      this.props.savePlayers({ players, room, playerCount })
     );
+    // List for game to start
+    socket.on("game has started", role => {
+      this.props.startGame();
+      socket.role = role;
+      console.log("socket role start game", role, socket);
+    });
   }
 
   render() {
@@ -53,5 +59,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { fetchUser, saveSocket, savePlayers }
+  { fetchUser, saveSocket, savePlayers, startGame }
 )(App);
