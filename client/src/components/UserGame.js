@@ -23,6 +23,7 @@ class UserGame extends Component {
           // This is where the game play will start to be displayed.
           <div>
             <h3 className='colony-text'>Game has started!</h3>
+            <h5 className='colony-text'>You have been assigned this role:</h5>
             <Character info={this.props.socket.socket.role} />
           </div>
         )}

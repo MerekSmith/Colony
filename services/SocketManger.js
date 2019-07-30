@@ -1,5 +1,5 @@
 const io = require("../index.js").io;
-const roles = require("./roles.json");
+const roles = require("../client/src/assets/roles.json");
 
 getPlayers = room => {
   // Accessing the socket.io sockets that are associated with the room provided.
@@ -11,6 +11,7 @@ getPlayers = room => {
   // Intialize players array.
   let players = [];
   for (var clientId in clients) {
+    console.log("clientId", clientId);
     //this is the socket of each client in the room.
     var clientSocket = io.sockets.connected[clientId];
     let player = {};

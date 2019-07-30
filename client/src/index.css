@@ -2,9 +2,9 @@ html {
   position: relative;
   background: url("./assets/images/colony-background.png") no-repeat center
     fixed;
-  -webkit-background-size: cover;
+  /* -webkit-background-size: cover;
   -moz-background-size: cover;
-  -o-background-size: cover;
+  -o-background-size: cover; */
 }
 
 body {

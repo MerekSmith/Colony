@@ -53,13 +53,14 @@ class GameModerator extends Component {
                   Please have users join this game with room # {this.state.room}
                 </h4>
                 {this.props.socket.playerCount >= 3 ? (
-                  <button
-                    className='main-btn btn-warning'
-                    style={{ margin: "auto" }}
-                    onClick={() => this.startGame()}
-                  >
-                    Start Game
-                  </button>
+                  <div style={{ margin: "auto" }}>
+                    <button
+                      className='main-btn btn-warning'
+                      onClick={() => this.startGame()}
+                    >
+                      Start Game
+                    </button>
+                  </div>
                 ) : (
                   <h4 className='colony-text'>
                     Need 3 players to start the game. There are currently{" "}
@@ -92,7 +93,9 @@ class GameModerator extends Component {
           <Col md={4}>
             <PlayerList playerList={this.props.socket} />
           </Col>
-          <Col md={8}>{this.renderContent()}</Col>
+          <Col md={8} style={{ textAlign: "center" }}>
+            {this.renderContent()}
+          </Col>
         </Row>
       </div>
     );

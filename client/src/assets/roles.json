@@ -21,7 +21,7 @@
     "team": "The Infected",
     "winCondition": "None of the infected die at the end, even if the Psychopath dies. If no one is infected, the Psychopath wins as long as they do not die.",
     "maxRoleCount": 1,
-    "image": "./assets/images/male-infected.png"
+    "image": "./assets/images/psychopath-infected.png"
   },
   {
     "roleName": "Scientist",
@@ -35,16 +35,16 @@
     "roleName": "Sad Robot",
     "effect": "The Sad Robot hates being in the colony so much that he just wants to die.",
     "team": "The Sad Robot is not on a team but is considered a Colonist.",
-    "winCondition": "The Sad Robot wins if he dies. If he dies along with an infected player, both teams win. If only the Tanner dies, he is the only winner.",
+    "winCondition": "The Sad Robot wins if he dies. If he dies along with an infected player, both teams win. If only the Sad Robot dies, he is the only winner.",
     "maxRoleCount": 1,
-    "image": "./assets/images/robot-colonist.png"
+    "image": "./assets/images/sad-robot-colonist.png"
   },
   {
     "roleName": "Paranoid",
-    "effect": "If the paranoid dies, the player they selected also dies.",
+    "effect": "If the Paranoid dies, the player they selected also dies.",
     "team": "The Colonists",
     "winCondition": "At least one of the infected die at the end.",
     "maxRoleCount": 1,
-    "image": "./assets/images/male-colonist.png"
+    "image": "./assets/images/paranoid-colonist.png"
   }
 ]

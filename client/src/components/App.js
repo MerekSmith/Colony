@@ -42,7 +42,7 @@ class App extends Component {
             <Header />
             <div className='container m-auto'>
               <Route exact path='/' component={Landing} />
-              <Route exact path='/instuctions' component={Instructions} />
+              <Route exact path='/instructions' component={Instructions} />
               <Route exact path='/game' component={GameModerator} />
               <Route exact path='/join' component={Join} />
             </div>

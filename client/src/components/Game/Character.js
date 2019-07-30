@@ -12,7 +12,6 @@ function Character(props) {
   } = props.info;
   return (
     <div className='m-auto' style={{ textAlign: "center", margin: "auto" }}>
-      <h5 className='colony-text'>You have been assigned this role:</h5>
       <Card className='character-card'>
         <Card.Img src={image} />
         <Card.Body>
