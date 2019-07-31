@@ -2,7 +2,10 @@ import {
   SAVE_SOCKET,
   SAVE_PLAYERS,
   START_GAME,
-  PLAYER_READY
+  PLAYER_READY,
+  POWER_CONFIRMED,
+  TIME_TO_VOTE,
+  VOTE_UPDATE
 } from "../actions/types";
 
 const intitalState = {
@@ -11,7 +14,11 @@ const intitalState = {
   players: null,
   playerCount: 0,
   gameStarted: false,
-  allReadyToPlay: false
+  allReadyToPlay: false,
+  allConfirmed: false,
+  timeToVote: false,
+  fullPlayerList: null,
+  allVoted: false
 };
 
 export default function(state = intitalState, action) {
@@ -34,11 +41,28 @@ export default function(state = intitalState, action) {
         gameStarted: true
       };
     case PLAYER_READY:
-      console.log(action.payload);
       return {
         ...state,
         players: action.payload.players,
         allReadyToPlay: action.payload.allReadyToPlay
+      };
+    case POWER_CONFIRMED:
+      return {
+        ...state,
+        players: action.payload.players,
+        allConfirmed: action.payload.allConfirmed
+      };
+    case TIME_TO_VOTE:
+      return {
+        ...state,
+        timeToVote: true
+      };
+    case VOTE_UPDATE:
+      console.log("vote update", action.payload);
+      return {
+        ...state,
+        fullPlayerList: action.payload.fullPlayerList,
+        allVoted: action.payload.allVoted
       };
     default:
       return state;

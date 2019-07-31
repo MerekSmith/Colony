@@ -72,6 +72,12 @@ body {
   font-weight: bold;
 }
 
+.timer {
+  font-size: 200px;
+  font-family: "Nosifer", cursive;
+  color: #9b1f05;
+}
+
 @media only screen and (max-width: 640px) {
   .navbar-brand {
     font-size: 35px;

@@ -4,26 +4,29 @@ import { Card } from "react-bootstrap";
 import { playerReady } from "../actions/socketActions";
 import Character from "./Game/Character";
 import RoleRevealList from "./Game/RoleRevealList";
+import VotingList from "./Game/VotingList";
 
 class UserGame extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      ready: false,
+      // ready: false,
       revealPlayerList: null,
       extraRolesList: null,
       fullPlayerList: null,
       revealSelected: false,
       extraRolesSelected: false,
-      revealSelectedList: []
+      revealSelectedList: [],
+      powerConfirmed: false,
+      voted: false
     };
   }
 
   updateReveal(name, roleName, isRevealed, myRole) {
     isRevealed = true;
     const player = { name, roleName, isRevealed };
-    console.log("isRevealed", name, isRevealed, player);
+
     if (
       name.slice(0, 10) !== "Extra Role" ||
       this.state.revealSelectedList.length === 1 ||
@@ -47,36 +50,17 @@ class UserGame extends Component {
     }));
   }
 
-  //   var index = this.state.extraRolesList.findIndex(
-  //     player => player.name === name
-  //   );
-  //   console.log("index", index);
-  //   if (index === -1) {
-  //     // Handle error
-  //   } else {
-  //     this.setState(prevState => ({
-  //       extraRolesList: [
-  //         ...prevState.extraRolesList.slice(0, index),
-  //         Object.assign(
-  //           {},
-  //           prevState.extraRolesList[index],
-  //           (isRevealed = true)
-  //         ),
-  //         ...prevState.extraRolesList.slice(index + 1)
-  //       ]
-  //     }));
-  //   }
-  // }
-
   ready() {
     const { socket, room } = this.props.socket;
     socket.ready = true;
-    this.setState({ ready: true });
     socket.emit("ready to play", room);
   }
 
   powerConfirm() {
-    // TODO: emit that this player has confirmed their power.
+    const { socket, room } = this.props.socket;
+    socket.ready = true;
+    this.setState({ powerConfirmed: true });
+    socket.emit("power confirmed", room);
   }
 
   getRoles(socket, room, roleName) {
@@ -92,6 +76,13 @@ class UserGame extends Component {
         }
       );
     }
+  }
+
+  submitVote(votedName) {
+    const { socket, room } = this.props.socket;
+
+    socket.emit("player voted", room, votedName);
+    this.setState({ voted: true });
   }
 
   renderJoined() {
@@ -300,21 +291,39 @@ class UserGame extends Component {
   }
 
   render() {
+    const { socket } = this.props;
     return (
       <div style={{ textAlign: "center" }}>
-        {this.props.socket.allReadyToPlay ? (
-          // This is where the game play will start to be displayed once all players are ready.
+        {!this.props.socket.timeToVote ? (
+          this.props.socket.allReadyToPlay ? (
+            // This is where the game play will start to be displayed once all players are ready.
+            <React.Fragment>
+              {this.roleAction()}
+              {!this.state.powerConfirmed ? (
+                <button
+                  className='main-btn btn-warning power-btn'
+                  onClick={() => this.powerConfirm()}
+                >
+                  Ready for Game
+                </button>
+              ) : null}
+            </React.Fragment>
+          ) : (
+            this.renderJoined()
+          )
+        ) : !this.state.voted ? (
           <React.Fragment>
-            {this.roleAction()}
-            <button
-              className='main-btn btn-warning power-btn'
-              onClick={() => this.powerConfirm()}
-            >
-              Ready for Game
-            </button>
+            <h5>Click on the player you vote for:</h5>
+            <VotingList
+              playerList={socket.players}
+              playerName={socket.socket.name}
+              onClick={votedName => this.submitVote(votedName)}
+            />
           </React.Fragment>
         ) : (
-          this.renderJoined()
+          <h4>
+            You have voted! Watch the Moderator screen to see the results!
+          </h4>
         )}
       </div>
     );

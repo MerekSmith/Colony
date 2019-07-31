@@ -1,7 +1,7 @@
 const io = require("../index.js").io;
 const roles = require("../client/src/assets/roles.json");
 
-getPlayers = room => {
+getPlayers = (room, readyReset = false) => {
   // Accessing the socket.io sockets that are associated with the room provided.
   const clients = io.sockets.adapter.rooms[room].sockets;
 
@@ -13,6 +13,9 @@ getPlayers = room => {
   for (var clientId in clients) {
     //this is the socket of each client in the room.
     var clientSocket = io.sockets.connected[clientId];
+    // If reset is true, reset all sockets to false for ready.
+    readyReset ? (clientSocket.ready = false) : null;
+
     let player = {};
     player.id = clientSocket.id;
     player.name = clientSocket.name;
@@ -124,7 +127,7 @@ module.exports = function(socket) {
   socket.on("ready to play", room => {
     socket.ready = true;
 
-    const players = getPlayers(room);
+    let players = getPlayers(room);
 
     // Loop through players to see if all are ready.
     let readyCount = 0;
@@ -137,43 +140,12 @@ module.exports = function(socket) {
       ? (allReadyToPlay = true)
       : (allReadyToPlay = false);
 
-    // console.log("players", players);
+    if (allReadyToPlay) {
+      let readyReset = true;
+      players = getPlayers(room, readyReset);
+    }
     io.to(room).emit("player is ready", players, allReadyToPlay);
   });
-
-  // socket.on("power round", room => {
-  //   let timer = 15;
-  //   roundTimer = () => {
-  //     if (timer === 0) {
-  //       console.log("time's up!");
-  //       clearInterval(intervalTimer);
-  //       // TODO: End of power round
-  //     }
-  //     // io.emit("timer", timer);
-  //     console.log(timer);
-  //     timer--;
-  //   };
-  //   let intervalTimer;
-  //   intervalTimer = setInterval(roundTimer, 1000);
-
-  //   // Accessing the socket.io sockets that are associated with the room provided.
-  //   const clients = io.sockets.adapter.rooms[room].sockets;
-
-  //   // Intialize players array.
-  //   for (var clientId in clients) {
-  //     //this is the socket of each client in the room.
-  //     var clientSocket = io.sockets.connected[clientId];
-  //     console.log(
-  //       "clientSocket name and role",
-  //       clientSocket.name,
-  //       clientSocket.role
-  //     );
-
-  //     if (clientSocket.name === "Moderator")
-  //       //you can do whatever you need with this
-  //       clientSocket.emit("power action", "Updates");
-  //   }
-  // });
 
   socket.on("review roles", (room, requestType, fn) => {
     // Accessing the socket.io sockets that are associated with the room provided.
@@ -238,8 +210,77 @@ module.exports = function(socket) {
           break;
       }
     }
-    // console.log("infected players", revealPlayerList);
 
     fn(revealPlayerList, extraRoleList);
+  });
+
+  socket.on("power confirmed", room => {
+    socket.ready = true;
+
+    let players = getPlayers(room);
+
+    // Loop through players to see if all are ready.
+    let readyCount = 0;
+    let allConfirmed = false;
+    players.forEach(player => {
+      player.ready || player.name === "Moderator" ? readyCount++ : null;
+    });
+
+    readyCount === players.length
+      ? (allConfirmed = true)
+      : (allConfirmed = false);
+
+    if (allConfirmed) {
+      let readyReset = true;
+      players = getPlayers(room, readyReset);
+    }
+    io.to(room).emit("power is confirmed", players, allConfirmed);
+  });
+
+  socket.on("start talking phase", room => {
+    let timer = 10;
+    roundTimer = () => {
+      if (timer === 0) {
+        clearInterval(intervalTimer);
+        io.to(room).emit("time to vote");
+        timer = "0";
+      }
+      io.to(socket.id).emit("timer", timer);
+      timer--;
+    };
+    let intervalTimer;
+    intervalTimer = setInterval(roundTimer, 1000);
+  });
+
+  socket.on("player voted", (room, votedName) => {
+    const clients = io.sockets.adapter.rooms[room].sockets;
+    socket.voted = votedName;
+
+    let fullPlayerList = [];
+    let votedCount = 0;
+    let voteCount = [];
+    let moderatorSocket;
+    for (var clientId in clients) {
+      //this is the socket of each client in the room.
+      var clientSocket = io.sockets.connected[clientId];
+      if (clientSocket.name === "Moderator") {
+        moderatorSocket = clientSocket.id;
+      } else {
+        let player = {};
+        player.name = clientSocket.name;
+        player.role = clientSocket.role.roleName;
+        player.voted = clientSocket.voted || false;
+        if (typeof clientSocket.voted !== "undefined") {
+          votedCount++;
+        }
+        fullPlayerList.push(player);
+      }
+    }
+
+    io.to(room).emit("vote update", fullPlayerList, votedCount);
+  });
+
+  socket.on("all have voted", room => {
+    io.to(room).emit("all voted");
   });
 };

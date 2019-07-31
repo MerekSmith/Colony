@@ -6,7 +6,10 @@ import {
   savePlayers,
   saveSocket,
   startGame,
-  playerReady
+  playerReady,
+  powerConfirmed,
+  timeToVote,
+  updateVotedList
 } from "../actions/socketActions";
 import io from "socket.io-client";
 import "../index.css";
@@ -35,13 +38,35 @@ class App extends Component {
       socket.role = role;
       this.props.saveSocket(socket);
       this.props.startGame();
-      console.log("socket role start game", role, socket);
     });
 
     socket.on("player is ready", (players, allReadyToPlay) => {
       this.props.playerReady({ players, allReadyToPlay });
-      if (this.props.socket.socket.name === "Moderator" && allReadyToPlay) {
-        socket.emit("power round", this.props.socket.room);
+    });
+
+    socket.on("power is confirmed", (players, allConfirmed) => {
+      this.props.powerConfirmed({ players, allConfirmed });
+      if (allConfirmed && this.props.socket.socket.name === "Moderator") {
+        socket.emit("start talking phase", this.props.socket.room);
+      }
+    });
+
+    // Listen for voting round.
+    socket.on("time to vote", () => {
+      console.log("vote hit");
+      this.props.timeToVote();
+    });
+
+    // List for voting player list update.
+    socket.on("vote update", (fullPlayerList, votedCount) => {
+      console.log("full playerlist", fullPlayerList);
+      let allVoted = false;
+      if (votedCount === this.props.socket.playerCount) {
+        allVoted = true;
+      }
+      this.props.updateVotedList({ fullPlayerList, allVoted });
+      if (allVoted) {
+        socket.emit("all have voted", this.props.socket.room);
       }
     });
   }
@@ -72,5 +97,14 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { fetchUser, saveSocket, savePlayers, startGame, playerReady }
+  {
+    fetchUser,
+    saveSocket,
+    savePlayers,
+    startGame,
+    playerReady,
+    powerConfirmed,
+    timeToVote,
+    updateVotedList
+  }
 )(App);

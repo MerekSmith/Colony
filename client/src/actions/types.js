@@ -4,3 +4,6 @@ export const SAVE_SOCKET = "SAVE_SOCKET";
 export const SAVE_PLAYERS = "SAVE_PLAYERS";
 export const START_GAME = "START_GAME";
 export const PLAYER_READY = "PLAYER_READY";
+export const POWER_CONFIRMED = "POWER_CONFIRMED";
+export const TIME_TO_VOTE = "TIME_TO_VOTE";
+export const VOTE_UPDATE = "VOTE_UPDATE";
