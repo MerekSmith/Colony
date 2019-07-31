@@ -3,11 +3,8 @@ import { Card, ListGroup } from "react-bootstrap";
 
 function PlayerList(props) {
   // console.log("props", props);
-  const { players, room } = props.playerList;
-  let playerCount = 0;
-  if (players) {
-    playerCount = players.length;
-  }
+  const { players, room, playerCount } = props.playerList;
+
   return (
     <div>
       <Card style={{ border: "black 2px solid" }}>
@@ -21,11 +18,13 @@ function PlayerList(props) {
           Players in room {room}
         </Card.Header>
         <ListGroup variant='flush'>
-          {playerCount > 1 ? (
-            players.map(({ name, id }) => {
-              return name === "Moderator" ? null : (
-                <ListGroup.Item key={id}>{name}</ListGroup.Item>
-              );
+          {playerCount > 0 ? (
+            players.map(({ name, ready, id }) => {
+              return name !== "Moderator" ? (
+                <ListGroup.Item key={id}>
+                  {ready ? <i className='fas fa-check' /> : null} {name}
+                </ListGroup.Item>
+              ) : null;
             })
           ) : (
             <ListGroup.Item>Waiting for players to join...</ListGroup.Item>

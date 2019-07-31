@@ -32,6 +32,8 @@ class GameModerator extends Component {
     this.setState({ room });
     // Set name as Moderator
     const name = "Moderator";
+    socket.name = name;
+    socket.role = name;
     socket.emit("join room", room, name);
   }
 
@@ -44,7 +46,9 @@ class GameModerator extends Component {
 
   renderContent() {
     switch (this.props.socket.gameStarted) {
-      case false:
+      case true:
+        return <Moderator />;
+      default:
         return (
           <React.Fragment>
             {this.state.room ? (
@@ -76,8 +80,6 @@ class GameModerator extends Component {
             )}
           </React.Fragment>
         );
-      case true:
-        return <Moderator />;
     }
   }
 

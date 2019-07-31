@@ -12,7 +12,7 @@
     "effect": "No special role.",
     "team": "The Colonists",
     "winCondition": "At least one of the infected die at the end.",
-    "maxRoleCount": 99,
+    "maxRoleCount": 3,
     "image": "./assets/images/male-colonist.png"
   },
   {
@@ -25,7 +25,7 @@
   },
   {
     "roleName": "Scientist",
-    "effect": "Can select another player and view their role during the night phase.",
+    "effect": "During the night phase, the Scientist may look at another players role or 2 of the 3 hidden roles.",
     "team": "The Colonists",
     "winCondition": "At least one of the infected die at the end.",
     "maxRoleCount": 1,

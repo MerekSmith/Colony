@@ -2,7 +2,12 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { connect } from "react-redux";
 import { fetchUser } from "../actions/authActions";
-import { savePlayers, saveSocket, startGame } from "../actions/socketActions";
+import {
+  savePlayers,
+  saveSocket,
+  startGame,
+  playerReady
+} from "../actions/socketActions";
 import io from "socket.io-client";
 import "../index.css";
 
@@ -32,6 +37,13 @@ class App extends Component {
       this.props.startGame();
       console.log("socket role start game", role, socket);
     });
+
+    socket.on("player is ready", (players, allReadyToPlay) => {
+      this.props.playerReady({ players, allReadyToPlay });
+      if (this.props.socket.socket.name === "Moderator" && allReadyToPlay) {
+        socket.emit("power round", this.props.socket.room);
+      }
+    });
   }
 
   render() {
@@ -60,5 +72,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { fetchUser, saveSocket, savePlayers, startGame }
+  { fetchUser, saveSocket, savePlayers, startGame, playerReady }
 )(App);

@@ -11,7 +11,6 @@ getPlayers = room => {
   // Intialize players array.
   let players = [];
   for (var clientId in clients) {
-    console.log("clientId", clientId);
     //this is the socket of each client in the room.
     var clientSocket = io.sockets.connected[clientId];
     let player = {};
@@ -19,6 +18,7 @@ getPlayers = room => {
     player.name = clientSocket.name;
     player.connected = clientSocket.connected;
     player.room = room;
+    player.ready = clientSocket.ready || false;
 
     players.push(player);
 
@@ -28,7 +28,7 @@ getPlayers = room => {
   return players;
 };
 
-assignRoles = clients => {
+assignRoles = (clients, socket) => {
   //  to get the number of clients
   var numClients =
     typeof clients !== "undefined" ? Object.keys(clients).length - 1 : 0;
@@ -48,7 +48,7 @@ assignRoles = clients => {
       randomRoles.push(roles[index]);
     }
   }
-  console.log("random roles", randomRoles);
+  // console.log("random roles", randomRoles);
   let roleIndex = 0;
   for (var clientId in clients) {
     //this is the socket of each client in the room.
@@ -65,9 +65,12 @@ assignRoles = clients => {
         `${clientSocket.name} is socket.role of ${clientSocket.role.roleName}`
       );
     }
+
     // emit to each unique socket within the room their specific role and that the game has started.
     clientSocket.emit("game has started", clientSocket.role);
   }
+  // Remove the last 3 random roles and save them onto the Moderator socket for use later. These are extra roles in the game to make it more challenging to determine each players role.
+  socket.extraRoles = randomRoles.slice(randomRoles.length - 3);
 };
 
 module.exports = function(socket) {
@@ -113,8 +116,130 @@ module.exports = function(socket) {
     // Accessing the socket.io sockets that are associated with the room provided.
     const clients = io.sockets.adapter.rooms[room].sockets;
 
-    assignRoles(clients);
+    assignRoles(clients, socket);
 
     // io.to(room).emit("game has started", socket.name);
+  });
+
+  socket.on("ready to play", room => {
+    socket.ready = true;
+
+    const players = getPlayers(room);
+
+    // Loop through players to see if all are ready.
+    let readyCount = 0;
+    let allReadyToPlay = false;
+    players.forEach(player => {
+      player.ready || player.name === "Moderator" ? readyCount++ : null;
+    });
+
+    readyCount === players.length
+      ? (allReadyToPlay = true)
+      : (allReadyToPlay = false);
+
+    // console.log("players", players);
+    io.to(room).emit("player is ready", players, allReadyToPlay);
+  });
+
+  // socket.on("power round", room => {
+  //   let timer = 15;
+  //   roundTimer = () => {
+  //     if (timer === 0) {
+  //       console.log("time's up!");
+  //       clearInterval(intervalTimer);
+  //       // TODO: End of power round
+  //     }
+  //     // io.emit("timer", timer);
+  //     console.log(timer);
+  //     timer--;
+  //   };
+  //   let intervalTimer;
+  //   intervalTimer = setInterval(roundTimer, 1000);
+
+  //   // Accessing the socket.io sockets that are associated with the room provided.
+  //   const clients = io.sockets.adapter.rooms[room].sockets;
+
+  //   // Intialize players array.
+  //   for (var clientId in clients) {
+  //     //this is the socket of each client in the room.
+  //     var clientSocket = io.sockets.connected[clientId];
+  //     console.log(
+  //       "clientSocket name and role",
+  //       clientSocket.name,
+  //       clientSocket.role
+  //     );
+
+  //     if (clientSocket.name === "Moderator")
+  //       //you can do whatever you need with this
+  //       clientSocket.emit("power action", "Updates");
+  //   }
+  // });
+
+  socket.on("review roles", (room, requestType, fn) => {
+    // Accessing the socket.io sockets that are associated with the room provided.
+    const clients = io.sockets.adapter.rooms[room].sockets;
+    const { name } = socket;
+
+    // Intialize infected array.
+    let revealPlayerList = [];
+    let extraRoleList = [];
+    let i = 1;
+
+    for (var clientId in clients) {
+      //this is the socket of each client in the room.
+      let clientSocket = io.sockets.connected[clientId];
+      let player = {};
+
+      switch (requestType) {
+        case "Moderator":
+          if (clientSocket.name !== "Moderator") {
+            player.name = clientSocket.name;
+            player.roleName = clientSocket.role.roleName;
+            revealPlayerList.push(player);
+          } else {
+            clientSocket.extraRoles.forEach(role => {
+              let extraRole = {};
+              extraRole.name = `Extra Role ${i}`;
+              extraRole.roleName = role.roleName;
+              i++;
+              extraRoleList.push(extraRole);
+            });
+          }
+          break;
+
+        case "Scientist":
+          if (clientSocket.name !== "Moderator" && clientSocket.name !== name) {
+            player.name = clientSocket.name;
+            player.roleName = clientSocket.role.roleName;
+            player.isRevealed = false;
+            revealPlayerList.push(player);
+          } else if (clientSocket.name === "Moderator") {
+            clientSocket.extraRoles.forEach(role => {
+              let extraRole = {};
+              extraRole.name = `Extra Role ${i}`;
+              extraRole.roleName = role.roleName;
+              extraRole.isRevealed = false;
+              i++;
+              extraRoleList.push(extraRole);
+            });
+          }
+          break;
+
+        default:
+          if (clientSocket.name !== "Moderator") {
+            if (
+              clientSocket.role.roleName === "Infected" &&
+              clientSocket.name !== name
+            ) {
+              player.name = clientSocket.name;
+              revealPlayerList.push(player);
+            }
+          }
+          break;
+      }
+    }
+    // console.log("infected players", revealPlayerList);
+
+    fn(revealPlayerList, extraRoleList);
   });
 };
