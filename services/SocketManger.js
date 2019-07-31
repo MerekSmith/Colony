@@ -238,7 +238,7 @@ module.exports = function(socket) {
   });
 
   socket.on("start talking phase", room => {
-    let timer = 10;
+    let timer = 60;
     roundTimer = () => {
       if (timer === 0) {
         clearInterval(intervalTimer);
