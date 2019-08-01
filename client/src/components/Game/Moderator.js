@@ -48,6 +48,7 @@ class Moderator extends Component {
       this.setState({ votedCounter, votedPlayer });
     }
   }
+  // awdaw
 
   renderResults() {
     return (
