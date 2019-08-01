@@ -20,7 +20,7 @@ import Instructions from "./Instructions";
 import GameModerator from "./GameModerator";
 import Join from "./Join";
 
-const socket = io.connect("localhost:5000");
+const socket = io.connect("/");
 class App extends Component {
   componentDidMount() {
     // Fetch Google Login
