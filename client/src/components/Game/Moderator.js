@@ -34,13 +34,13 @@ class Moderator extends Component {
         const index =
           votedCounter.findIndex(voted => voted.voted === vote.voted) || null;
         console.log("index", index);
-        if (index === -1 || null) {
+        if (index !== -1 || null) {
+          votedCounter[index].count++;
+        } else {
           let voted = {};
           voted.voted = vote.voted;
           voted.count = 1;
           votedCounter.push(voted);
-        } else {
-          votedCounter[index].count++;
         }
       });
       votedCounter.sort((a, b) => (a.voted < b.voted ? 1 : -1));
