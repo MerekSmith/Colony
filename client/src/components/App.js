@@ -20,7 +20,8 @@ import Instructions from "./Instructions";
 import GameModerator from "./GameModerator";
 import Join from "./Join";
 
-const socket = io.connect("/");
+const url = process.env === "production" ? "/" : "localhost:5000";
+const socket = io.connect(url);
 class App extends Component {
   componentDidMount() {
     // Fetch Google Login
@@ -33,6 +34,7 @@ class App extends Component {
     socket.on("joined", ({ players, room, playerCount }) =>
       this.props.savePlayers({ players, room, playerCount })
     );
+
     // List for game to start
     socket.on("game has started", role => {
       socket.role = role;

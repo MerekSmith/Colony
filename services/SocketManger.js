@@ -104,8 +104,13 @@ module.exports = function(socket) {
   // End join room logic
 
   socket.on("disconnect", () => {
+    // TODO: Find a figure out if anyone else is in the room. If not, do not update playerList.
     const { room } = socket;
-    if (typeof room !== "undefined") {
+    // lastPlayer checks to see if the room has any remaining sockets in it. If it is the last player, it becomes undefined and we should not try to pull the player list again.
+    const lastPlayer =
+      typeof io.sockets.adapter.rooms[room] === "undefined" ? true : false;
+
+    if (typeof room !== "undefined" && !lastPlayer) {
       // Runs a function that puts together an array of player objects with their name and socket.id
       const players = getPlayers(room);
       const playerCount = players.length - 1;
