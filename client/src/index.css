@@ -33,6 +33,11 @@ body {
   font-family: "Nosifer", cursive;
 }
 
+.moderator-display {
+  background-color: #e67e22;
+  opacity: 0.8;
+}
+
 .player-list {
   font-size: 14px;
 }

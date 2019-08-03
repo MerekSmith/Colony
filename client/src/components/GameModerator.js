@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { startGame } from "../actions/socketActions";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Card } from "react-bootstrap";
 import PlayerList from "./Game/PlayerList";
 import Moderator from "./Game/Moderator";
 
@@ -96,7 +96,7 @@ class GameModerator extends Component {
             <PlayerList playerList={this.props.socket} />
           </Col>
           <Col md={8} style={{ textAlign: "center" }}>
-            {this.renderContent()}
+            <Card className='moderator-display'>{this.renderContent()}</Card>
           </Col>
         </Row>
       </div>

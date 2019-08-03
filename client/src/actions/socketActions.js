@@ -6,7 +6,8 @@ import {
   PLAYER_READY,
   POWER_CONFIRMED,
   TIME_TO_VOTE,
-  VOTE_UPDATE
+  VOTE_UPDATE,
+  RESET_PLAYER
 } from "./types";
 
 export const saveSocket = socket => dispatch => {
@@ -35,4 +36,8 @@ export const timeToVote = () => dispatch => {
 
 export const updateVotedList = ({ fullPlayerList, allVoted }) => dispatch => {
   dispatch({ type: VOTE_UPDATE, payload: { fullPlayerList, allVoted } });
+};
+
+export const resetPlayer = () => dispatch => {
+  dispatch({ type: RESET_PLAYER });
 };

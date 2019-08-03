@@ -321,7 +321,7 @@ class UserGame extends Component {
             />
           </React.Fragment>
         ) : (
-          <h4>
+          <h4 className='colony-text'>
             You have voted! Watch the Moderator screen to see the results!
           </h4>
         )}

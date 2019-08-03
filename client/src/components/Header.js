@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import { resetPlayer } from "../actions/socketActions";
 
 class Header extends Component {
+  // Currently not being used as only the main Colony title is showing.
   renderContent() {
     switch (this.props.auth) {
       case null:
@@ -31,11 +33,24 @@ class Header extends Component {
     }
   }
 
+  restartGame() {
+    const { allVoted, socket, room } = this.props.socket;
+
+    if (allVoted) {
+      socket.emit("leave room", room);
+      this.props.resetPlayer();
+    }
+  }
+
   render() {
     return (
       <nav className='navbar'>
         <div className='container'>
-          <Link className='navbar-brand main-header m-auto' to={"/"}>
+          <Link
+            className='navbar-brand main-header m-auto'
+            to={"/"}
+            onClick={() => this.restartGame}
+          >
             The Colony
           </Link>
           {/* <ul className='navbar-nav ml-auto'>{this.renderContent()}</ul> */}
@@ -45,9 +60,12 @@ class Header extends Component {
   }
 }
 
-function mapStateToProps({ auth }) {
+function mapStateToProps({ auth, socket }) {
   // This comes from state.auth.
-  return { auth };
+  return { auth, socket };
 }
 
-export default connect(mapStateToProps)(Header);
+export default connect(
+  mapStateToProps,
+  { resetPlayer }
+)(Header);

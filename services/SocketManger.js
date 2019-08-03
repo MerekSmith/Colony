@@ -243,7 +243,7 @@ module.exports = function(socket) {
   });
 
   socket.on("start talking phase", room => {
-    let timer = 60;
+    let timer = process.env === "production" ? 120 : 5;
     roundTimer = () => {
       if (timer === 0) {
         clearInterval(intervalTimer);
@@ -287,5 +287,9 @@ module.exports = function(socket) {
 
   socket.on("all have voted", room => {
     io.to(room).emit("all voted");
+  });
+
+  socket.on("leave room", room => {
+    socket.leave(room);
   });
 };

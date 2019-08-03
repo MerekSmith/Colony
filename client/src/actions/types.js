@@ -7,3 +7,4 @@ export const PLAYER_READY = "PLAYER_READY";
 export const POWER_CONFIRMED = "POWER_CONFIRMED";
 export const TIME_TO_VOTE = "TIME_TO_VOTE";
 export const VOTE_UPDATE = "VOTE_UPDATE";
+export const RESET_PLAYER = "RESET_PLAYER";

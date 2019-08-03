@@ -5,7 +5,8 @@ import {
   PLAYER_READY,
   POWER_CONFIRMED,
   TIME_TO_VOTE,
-  VOTE_UPDATE
+  VOTE_UPDATE,
+  RESET_PLAYER
 } from "../actions/types";
 
 const intitalState = {
@@ -58,11 +59,23 @@ export default function(state = intitalState, action) {
         timeToVote: true
       };
     case VOTE_UPDATE:
-      console.log("vote update", action.payload);
       return {
         ...state,
         fullPlayerList: action.payload.fullPlayerList,
         allVoted: action.payload.allVoted
+      };
+    case RESET_PLAYER:
+      return {
+        ...state,
+        room: null,
+        players: null,
+        playerCount: 0,
+        gameStarted: false,
+        allReadyToPlay: false,
+        allConfirmed: false,
+        timeToVote: false,
+        fullPlayerList: null,
+        allVoted: false
       };
     default:
       return state;
