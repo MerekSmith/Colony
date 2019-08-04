@@ -20,6 +20,7 @@ class Join extends Component {
     socket.name = this.state.name;
     socket.room = this.state.room;
     socket.emit("join room", this.state.room, this.state.name);
+    this.setState({ room: "" });
     // Creates an alert if the room entered does not exist.
     socket.on("room error", roomError => this.setState({ roomError }));
   };

@@ -16,7 +16,7 @@ class GameModerator extends Component {
   }
 
   componentDidMount() {
-    // console.log(!this.props.socket.socket, this.props.socket.socket);
+    // The socket is saved to the redux state when the user goes to the main landing page but it has an intial value of null.
     if (!this.props.socket.socket) {
       this.props.history.push("/");
     } else {

@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Card } from "react-bootstrap";
-import { playerReady } from "../actions/socketActions";
+import { Link } from "react-router-dom";
+import { playerReady, resetPlayer } from "../actions/socketActions";
 import Character from "./Game/Character";
 import RoleRevealList from "./Game/RoleRevealList";
 import VotingList from "./Game/VotingList";
@@ -83,6 +84,15 @@ class UserGame extends Component {
 
     socket.emit("player voted", room, votedName);
     this.setState({ voted: true });
+  }
+
+  restartGame() {
+    const { allVoted, socket, room } = this.props.socket;
+
+    if (allVoted) {
+      socket.emit("leave room", room);
+      this.props.resetPlayer();
+    }
   }
 
   renderJoined() {
@@ -321,9 +331,18 @@ class UserGame extends Component {
             />
           </React.Fragment>
         ) : (
-          <h4 className='colony-text'>
-            You have voted! Watch the Moderator screen to see the results!
-          </h4>
+          <React.Fragment>
+            <h4 className='colony-text'>
+              You have voted! Watch the Moderator screen to see the results!
+            </h4>
+            <Link
+              className='main-btn btn-warning restart-btn'
+              to='/join'
+              onClick={() => this.restartGame()}
+            >
+              Play Another Game
+            </Link>
+          </React.Fragment>
         )}
       </div>
     );
@@ -336,5 +355,5 @@ const mapStateToProps = ({ socket }) => ({
 
 export default connect(
   mapStateToProps,
-  { playerReady }
+  { playerReady, resetPlayer }
 )(UserGame);

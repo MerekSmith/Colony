@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { resetPlayer } from "../../actions/socketActions";
+import { Link } from "react-router-dom";
 import { Card, ListGroup } from "react-bootstrap";
 
 class Moderator extends Component {
@@ -31,10 +33,11 @@ class Moderator extends Component {
     if (allVoted) {
       let votedCounter = [];
       fullPlayerList.forEach(vote => {
-        const index =
-          votedCounter.findIndex(voted => voted.voted === vote.voted) || null;
-        console.log("index", index);
-        if (index === -1 || null) {
+        const index = votedCounter.findIndex(
+          voted => voted.voted === vote.voted
+        );
+        console.log("index", index, vote.voted, votedCounter);
+        if (index === -1) {
           let voted = {};
           voted.voted = vote.voted;
           voted.count = 1;
@@ -46,6 +49,15 @@ class Moderator extends Component {
       votedCounter.sort((a, b) => (a.voted < b.voted ? 1 : -1));
       const votedPlayer = votedCounter[0].voted;
       this.setState({ votedCounter, votedPlayer });
+    }
+  }
+
+  restartGame() {
+    const { allVoted, socket, room } = this.props.socket;
+
+    if (allVoted) {
+      socket.emit("leave room", room);
+      this.props.resetPlayer();
     }
   }
 
@@ -110,18 +122,26 @@ class Moderator extends Component {
               <React.Fragment>
                 <h4 className='colony-text'>Here are the results!</h4>
                 {this.renderResults()}
-                <h4 className='colony-text'>
-                  {/* {this.state.votedPlayer} received the most votes! */}
-                </h4>
+                {/* If the logic is updated, can put the winning info here. */}
+                {/* <h4 className='colony-text'>
+                  {this.state.votedPlayer} received the most votes!
+								</h4> */}
+                <Link
+                  className='main-btn btn-warning restart-btn'
+                  to='/'
+                  onClick={() => this.restartGame()}
+                >
+                  Play Another Game
+                </Link>
               </React.Fragment>
             )
-          ) : (
-            <h3 className='colony-text'>
-              The Game has Begun! Please review your roles and confirm you are
-              ready to begin the game.
-            </h3>
-          )
-        ) : null}
+          ) : null
+        ) : (
+          <h3 className='colony-text'>
+            The Game has Begun! Please review your roles and confirm you are
+            ready to begin the game.
+          </h3>
+        )}
       </div>
     );
   }
@@ -131,4 +151,7 @@ const mapStateToProps = ({ socket }) => ({
   socket
 });
 
-export default connect(mapStateToProps)(Moderator);
+export default connect(
+  mapStateToProps,
+  { resetPlayer }
+)(Moderator);

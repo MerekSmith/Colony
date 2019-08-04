@@ -49,7 +49,7 @@ class Header extends Component {
           <Link
             className='navbar-brand main-header m-auto'
             to={"/"}
-            onClick={() => this.restartGame}
+            onClick={() => this.restartGame()}
           >
             The Colony
           </Link>
